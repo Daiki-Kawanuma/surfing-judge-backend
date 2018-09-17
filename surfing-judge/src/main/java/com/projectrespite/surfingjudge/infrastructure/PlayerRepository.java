@@ -21,7 +21,7 @@ public class PlayerRepository implements IPlayerRepository {
     public List<PlayerResponse> getPlayers() {
 
         return client.database("players", false)
-                .query(new QueryBuilder(gt("_id", "0"))
+                .query(new QueryBuilder(gt("id", "0"))
                         .sort(Sort.asc("player_number"))
                         .fields("player_number", "player_name")
                         .build(), PlayerResponse.class)
