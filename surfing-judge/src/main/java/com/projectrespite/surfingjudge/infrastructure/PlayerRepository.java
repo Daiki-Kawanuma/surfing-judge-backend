@@ -5,7 +5,7 @@ import com.cloudant.client.api.query.QueryBuilder;
 import com.cloudant.client.api.query.Sort;
 import com.projectrespite.surfingjudge.domain.model.response.PlayerResponse;
 import com.projectrespite.surfingjudge.domain.repository.IPlayerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,9 +13,9 @@ import java.util.List;
 import static com.cloudant.client.api.query.Expression.gt;
 
 @Repository
+@AllArgsConstructor
 public class PlayerRepository implements IPlayerRepository {
 
-    @Autowired
     private CloudantClient client;
 
     public List<PlayerResponse> getPlayers() {
