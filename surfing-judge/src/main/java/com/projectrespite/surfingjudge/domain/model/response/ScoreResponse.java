@@ -15,7 +15,7 @@ public class ScoreResponse {
     @SerializedName("player_number")
     private int playerNumber;
 
-    @JsonProperty("name")
+    @JsonProperty("playerName")
     private String name;
 
     @JsonProperty("scores")

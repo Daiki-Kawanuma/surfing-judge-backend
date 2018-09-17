@@ -1,9 +1,10 @@
 package com.projectrespite.surfingjudge.domain.service;
 
 import com.projectrespite.surfingjudge.domain.model.data.JudgeEntity;
-import com.projectrespite.surfingjudge.domain.model.response.ScoreResponse;
+import com.projectrespite.surfingjudge.domain.model.response.JudgeResponse;
 import com.projectrespite.surfingjudge.domain.repository.IJudgeRepository;
-import com.projectrespite.surfingjudge.util.ScoreConverter;
+import com.projectrespite.surfingjudge.util.JudgeConverter;
+import com.projectrespite.surfingjudge.util.JudgeKey;
 import lombok.AllArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -14,20 +15,20 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class ScoreService {
+public class JudgeService {
 
     private IJudgeRepository repository;
 
-    public List<ScoreResponse> getScores(int round, int heat) {
+    public List<JudgeResponse> getJudges(int round, int heat) {
 
         val judges = repository.findJudgeByRoundHeat(round, heat);
 
-        Map<Integer, List<JudgeEntity>> groupByPlayer = judges.stream()
-                .collect(Collectors.groupingBy(JudgeEntity::getPlayerNumber));
+        Map<String, List<JudgeEntity>> groupByPlayer = judges.stream()
+                .collect(Collectors.groupingBy(new JudgeKey()));
 
         return groupByPlayer.entrySet().stream()
                 .map(Map.Entry::getValue)
-                .map(new ScoreConverter())
+                .map(new JudgeConverter())
                 .collect(Collectors.toList());
     }
 }

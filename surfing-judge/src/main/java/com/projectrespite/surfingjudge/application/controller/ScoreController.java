@@ -20,7 +20,7 @@ public class ScoreController {
     private ScoreService service;
 
     @GetMapping("/scores/{round}/{heat}")
-    @ApiOperation(value = "画像取得", produces = "application/json", response = ScoreResponse.class, responseContainer = "List")
+    @ApiOperation(value = "スコア取得", produces = "application/json", response = ScoreResponse.class, responseContainer = "List")
     public List<ScoreResponse> getScores(@ApiParam(value = "ラウンド", required = true) @PathVariable int round,
                                          @ApiParam(value = "ヒート", required = true) @PathVariable int heat) {
 

@@ -6,6 +6,7 @@ import com.cloudant.client.api.query.Sort;
 import com.projectrespite.surfingjudge.domain.model.data.*;
 import com.projectrespite.surfingjudge.domain.model.request.JudgeListRequest;
 import com.projectrespite.surfingjudge.domain.model.response.JudgeNumberResponse;
+import com.projectrespite.surfingjudge.domain.model.response.JudgeResponse;
 import lombok.val;
 import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,49 +27,8 @@ public class ApiController {
     @Autowired
     private CloudantClient client;
 
-    @GetMapping("/judges/{round}/{heat}")
-    public List<JudgeAggregate> getJudges(@PathVariable int round,
-                                          @PathVariable int heat) {
-
-        var database = client.database("judges", false);
-        var judges = database.query(new QueryBuilder(and(
-                eq("round", round), eq("heat", heat)))
-                .sort(Sort.asc("player_number"), Sort.asc("judge_number"))
-                .fields("player_number", "name", "judge_number", "wave", "score")
-                .build(), Judge.class)
-                .getDocs();
-
-        var aggregates = new ArrayList<JudgeAggregate>();
-
-        judges.forEach(judge -> {
-
-            var optional = aggregates.stream()
-                    .filter(a -> a.getPlayerNumber() == judge.getPlayerNumber())
-                    .filter(a -> a.getWave() == judge.getWave())
-                    .findFirst();
-
-            if (optional.isPresent()) {
-
-                optional.get().getScores().add(judge.getScore());
-
-            } else {
-
-                var aggregate = new JudgeAggregate();
-                aggregate.setPlayerNumber(judge.getPlayerNumber());
-                aggregate.setName(judge.getName());
-                aggregate.setWave(judge.getWave());
-                aggregate.setScores(new ArrayList<Double>());
-                aggregate.getScores().add(judge.getScore());
-
-                aggregates.add(aggregate);
-            }
-        });
-
-        return aggregates;
-    }
-
-    @PutMapping(value = "/judge", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Judge> postJudge(@RequestBody Judge judge) {
+    @PutMapping(value = "/judgeEntity", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<JudgeEntity> postJudge(@RequestBody JudgeEntity judgeEntity) {
 
         var database = client.database("judges", false);
 
@@ -76,26 +36,26 @@ public class ApiController {
         try {
 
             var idRev = database.query(new QueryBuilder(and(
-                    eq("round", judge.getRound()),
-                    eq("heat", judge.getHeat()),
-                    eq("player_number", judge.getPlayerNumber()),
-                    eq("judge_number", judge.getJudgeNumber()),
-                    eq("wave", judge.getWave())))
-                    .fields("_id", "_rev")
+                    eq("round", judgeEntity.getRound()),
+                    eq("heat", judgeEntity.getHeat()),
+                    eq("player_number", judgeEntity.getPlayerNumber()),
+                    eq("judge_number", judgeEntity.getJudgeNumber()),
+                    eq("wave", judgeEntity.getWave())))
+                    .fields("id", "rev")
                     .build(), IdRev.class)
                     .getDocs().get(0);
 
-            judge.set_id(idRev.get_id());
-            judge.set_rev(idRev.get_rev());
-            database.update(judge);
+            judgeEntity.setId(idRev.get_id());
+            judgeEntity.setRev(idRev.get_rev());
+            database.update(judgeEntity);
 
         } catch (IndexOutOfBoundsException e) {
 
-            database.post(judge);
+            database.post(judgeEntity);
         }
 
         return ResponseEntity.ok()
-                .body(judge);
+                .body(judgeEntity);
     }
 
     @PutMapping(value = "/judges", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -113,17 +73,17 @@ public class ApiController {
                     eq("player_number", form.getPlayerNumber()),
                     eq("judge_number", i[0]),
                     eq("wave", form.getWave())))
-                    .fields("_id", "_rev")
+                    .fields("id", "rev")
                     .build(), IdRev.class)
                     .getDocs().get(0);
 
-            var judge = new Judge();
-            judge.set_id(idRev.get_id());
-            judge.set_rev(idRev.get_rev());
+            var judge = new JudgeEntity();
+            judge.setId(idRev.get_id());
+            judge.setRev(idRev.get_rev());
             judge.setRound(form.getRound());
             judge.setHeat(form.getHeat());
             judge.setPlayerNumber(form.getPlayerNumber());
-            judge.setName(form.getName());
+            judge.setPlayerName(form.getName());
             judge.setJudgeNumber(i[0]++);
             judge.setWave(form.getWave());
             judge.setScore(score);
@@ -137,8 +97,8 @@ public class ApiController {
     public ResponseEntity putJudgeNumber() {
 
         val database = client.database("judge_number", false);
-        val judgeNumber = database.query(new QueryBuilder(gt("_id", "0"))
-                .fields("_id", "_rev", "numbers")
+        val judgeNumber = database.query(new QueryBuilder(gt("id", "0"))
+                .fields("id", "rev", "numbers")
                 .build(), JudgeNumber.class)
                 .getDocs().get(0);
 
@@ -169,8 +129,8 @@ public class ApiController {
     public ResponseEntity deleteJudgeNumber(@PathVariable String number) {
 
         val database = client.database("judge_number", false);
-        val judgeNumber = database.query(new QueryBuilder(gt("_id", "0"))
-                .fields("_id", "_rev", "numbers")
+        val judgeNumber = database.query(new QueryBuilder(gt("id", "0"))
+                .fields("id", "rev", "numbers")
                 .build(), JudgeNumber.class)
                 .getDocs().get(0);
 
