@@ -4,24 +4,25 @@ import lombok.var;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 public class AggregateUtil {
 
-    public static double average(double[] array){
+    public static double average(List<Double> array){
 
         double max = -1000;
         double min = 1000;
         double sum = 0;
 
-        for (int i = 0; i < array.length; i++){
-            if(array[i] > max)
-                max = array[i];
-            if(array[i] < min)
-                min = array[i];
-            sum += array[i];
+        for (int i = 0; i < array.size(); i++){
+            if(array.get(i) > max)
+                max = array.get(i);
+            if(array.get(i) < min)
+                min = array.get(i);
+            sum += array.get(i);
         }
 
-        return (sum - max -min) / array.length;
+        return (sum - max -min) / array.size();
     }
 
     public static double sumBestAndSecondBest(ArrayList<Double> list){

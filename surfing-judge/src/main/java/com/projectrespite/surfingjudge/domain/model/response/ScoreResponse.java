@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class ScoreResponse {
@@ -18,7 +19,7 @@ public class ScoreResponse {
     private String name;
 
     @JsonProperty("scores")
-    private ArrayList<Double> scores;
+    private List<Double> scores;
 
     @JsonProperty("aggregate")
     private Double aggregate;
