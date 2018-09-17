@@ -1,13 +1,11 @@
 package com.projectrespite.surfingjudge.application.controller;
 
 import com.cloudant.client.api.CloudantClient;
-import com.cloudant.client.api.Database;
 import com.cloudant.client.api.query.QueryBuilder;
 import com.cloudant.client.api.query.Sort;
 import com.projectrespite.surfingjudge.domain.model.data.*;
 import com.projectrespite.surfingjudge.domain.model.request.JudgeListRequest;
 import com.projectrespite.surfingjudge.domain.model.response.JudgeNumberResponse;
-import com.projectrespite.surfingjudge.util.AggregateUtil;
 import lombok.val;
 import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
