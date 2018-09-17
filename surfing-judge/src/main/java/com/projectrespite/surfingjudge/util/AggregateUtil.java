@@ -7,7 +7,7 @@ import java.util.Comparator;
 
 public class AggregateUtil {
 
-    public static double avarage(double[] array){
+    public static double average(double[] array){
 
         double max = -1000;
         double min = 1000;

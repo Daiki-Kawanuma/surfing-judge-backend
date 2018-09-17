@@ -6,9 +6,7 @@ import com.cloudant.client.api.query.QueryBuilder;
 import com.cloudant.client.api.query.Sort;
 import com.projectrespite.surfingjudge.domain.model.data.*;
 import com.projectrespite.surfingjudge.domain.model.request.JudgeListRequest;
-import com.projectrespite.surfingjudge.domain.model.request.LoginRequest;
 import com.projectrespite.surfingjudge.domain.model.response.JudgeNumberResponse;
-import com.projectrespite.surfingjudge.domain.model.response.LoginResponse;
 import com.projectrespite.surfingjudge.util.AggregateUtil;
 import lombok.val;
 import lombok.var;
@@ -29,62 +27,6 @@ public class ApiController {
 
     @Autowired
     private CloudantClient client;
-
-    @GetMapping("/scores/{round}/{heat}")
-    public List<Score> getScores(@PathVariable int round,
-                                 @PathVariable int heat) {
-
-        Database database = client.database("judges", false);
-        List<Judge> judges = database.query(new QueryBuilder(and(
-                eq("round", round), eq("heat", heat)))
-                .sort(Sort.asc("player_number"))
-                .fields("player_number", "name", "wave", "score", "judge_number")
-                .build(), Judge.class)
-                .getDocs();
-
-        var scores = new ArrayList<Score>();
-
-        judges.forEach(judge -> {
-
-            System.out.println(judge);
-
-            var optional = scores.stream()
-                    .filter(s -> s.getPlayerNumber() == judge.getPlayerNumber())
-                    .findFirst();
-
-            if (optional.isPresent()) {
-
-                var score = optional.get();
-                score.getJudgedScores()[judge.getWave() - 1][judge.getJudgeNumber() - 1]
-                        = judge.getScore();
-
-            } else {
-
-                var score = new Score();
-                score.setPlayerNumber(judge.getPlayerNumber());
-                score.setName(judge.getName());
-                score.setScores(new ArrayList<Double>());
-                score.getJudgedScores()[judge.getWave() - 1][judge.getJudgeNumber() - 1]
-                        = judge.getScore();
-
-                scores.add(score);
-            }
-        });
-
-        scores.forEach(score -> {
-
-            Arrays.stream(score.getJudgedScores()).forEach(array -> {
-                if (Arrays.stream(array).sum() > 0) {
-                    score.getScores().add(AggregateUtil.avarage(array));
-                }
-            });
-
-            score.setAggregate(AggregateUtil.sumBestAndSecondBest(score.getScores()));
-            score.setJudgedScores(null);
-        });
-
-        return scores;
-    }
 
     @GetMapping("/judges/{round}/{heat}")
     public List<JudgeAggregate> getJudges(@PathVariable int round,
