@@ -1,11 +1,10 @@
-package com.projectrespite.surfingjudge.model;
+package com.projectrespite.surfingjudge.domain.model.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Data
 public class Score {

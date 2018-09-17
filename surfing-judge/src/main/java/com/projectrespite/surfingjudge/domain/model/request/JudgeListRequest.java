@@ -1,4 +1,4 @@
-package com.projectrespite.surfingjudge.model.form;
+package com.projectrespite.surfingjudge.domain.model.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
@@ -7,7 +7,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class JudgeListForm {
+public class JudgeListRequest {
 
     private int round;
     private int heat;

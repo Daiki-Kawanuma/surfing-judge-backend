@@ -1,13 +1,15 @@
-package com.projectrespite.surfingjudge;
+package com.projectrespite.surfingjudge.application.controller;
 
 import com.cloudant.client.api.CloudantClient;
 import com.cloudant.client.api.Database;
 import com.cloudant.client.api.query.QueryBuilder;
 import com.cloudant.client.api.query.Sort;
-import com.projectrespite.surfingjudge.model.*;
-import com.projectrespite.surfingjudge.model.form.JudgeListForm;
-import com.projectrespite.surfingjudge.model.form.LoginForm;
-import com.projectrespite.surfingjudge.model.response.LoginResponse;
+import com.projectrespite.surfingjudge.domain.model.data.*;
+import com.projectrespite.surfingjudge.domain.model.request.JudgeListRequest;
+import com.projectrespite.surfingjudge.domain.model.request.LoginRequest;
+import com.projectrespite.surfingjudge.domain.model.response.JudgeNumberResponse;
+import com.projectrespite.surfingjudge.domain.model.response.LoginResponse;
+import com.projectrespite.surfingjudge.util.AggregateUtil;
 import lombok.val;
 import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static com.cloudant.client.api.query.Expression.eq;
 import static com.cloudant.client.api.query.Expression.gt;
@@ -29,26 +29,6 @@ public class ApiController {
 
     @Autowired
     private CloudantClient client;
-
-    @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public LoginResponse doLogin(@RequestBody LoginForm form) {
-
-        var response = new LoginResponse();
-
-        switch (form.getPassword()) {
-            case "player":
-                response.setRole("player");
-                break;
-            case "judge":
-                response.setRole("judge");
-                break;
-            default:
-                response.setStatus("failure");
-                break;
-        }
-
-        return response;
-    }
 
     @GetMapping(value = "/players")
     public List<String> getPlayers() {
@@ -189,7 +169,7 @@ public class ApiController {
     }
 
     @PutMapping(value = "/judges", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity postJudges(@RequestBody JudgeListForm form) {
+    public ResponseEntity postJudges(@RequestBody JudgeListRequest form) {
 
         var database = client.database("judges", false);
 
@@ -224,20 +204,52 @@ public class ApiController {
     }
 
     @PutMapping("/judge-number")
-    public ResponseEntity getJudgeNumber() {
+    public ResponseEntity putJudgeNumber() {
 
         val database = client.database("judge_number", false);
-        val count = database.query(new QueryBuilder(gt("_id", "0"))
-                .fields("_id", "_rev", "count")
-                .build(), Count.class)
+        val judgeNumber = database.query(new QueryBuilder(gt("_id", "0"))
+                .fields("_id", "_rev", "numbers")
+                .build(), JudgeNumber.class)
                 .getDocs().get(0);
 
-        if (count.getCount() < 5) {
-            count.setCount(count.getCount() + 1);
-            database.update(count);
-            return ResponseEntity.ok().body(count);
+        if (judgeNumber.getNumbers().size() < 5) {
+
+            for (String s : Arrays.asList("1", "2", "3", "4", "5")) {
+
+                if (!judgeNumber.getNumbers().contains(s)) {
+
+                    judgeNumber.getNumbers().add(s);
+                    Collections.sort(judgeNumber.getNumbers());
+                    database.update(judgeNumber);
+                    return ResponseEntity.ok()
+                            .body(new JudgeNumberResponse("success", s));
+                }
+            }
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new JudgeNumberResponse("failure", null));
+
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new JudgeNumberResponse("failure", null));
         }
+    }
+
+    @DeleteMapping("/judge-number/{number}")
+    public ResponseEntity deleteJudgeNumber(@PathVariable String number) {
+
+        val database = client.database("judge_number", false);
+        val judgeNumber = database.query(new QueryBuilder(gt("_id", "0"))
+                .fields("_id", "_rev", "numbers")
+                .build(), JudgeNumber.class)
+                .getDocs().get(0);
+
+        if (judgeNumber.getNumbers().contains(number)) {
+            judgeNumber.getNumbers().remove(number);
+            database.update(judgeNumber);
+        }
+
+        return ResponseEntity.ok()
+                .body(new JudgeNumberResponse("success", null));
     }
 }

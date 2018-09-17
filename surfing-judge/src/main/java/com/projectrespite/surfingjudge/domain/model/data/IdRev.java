@@ -1,4 +1,4 @@
-package com.projectrespite.surfingjudge.model;
+package com.projectrespite.surfingjudge.domain.model.data;
 
 import lombok.Data;
 
