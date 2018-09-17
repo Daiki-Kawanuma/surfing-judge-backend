@@ -30,16 +30,6 @@ public class ApiController {
     @Autowired
     private CloudantClient client;
 
-    @GetMapping(value = "/players")
-    public List<String> getPlayers() {
-
-        var players = new ArrayList<String>();
-        players.add("Masaki Goda");
-        players.add("Daiki Kawanuma");
-
-        return players;
-    }
-
     @GetMapping("/scores/{round}/{heat}")
     public List<Score> getScores(@PathVariable int round,
                                  @PathVariable int heat) {
