@@ -1,6 +1,7 @@
 package com.projectrespite.surfingjudge.application.controller;
 
 import com.projectrespite.surfingjudge.domain.model.data.JudgeEntity;
+import com.projectrespite.surfingjudge.domain.model.request.PlayerScoreRequest;
 import com.projectrespite.surfingjudge.domain.model.response.JudgeResponse;
 import com.projectrespite.surfingjudge.domain.model.response.ScoreResponse;
 import com.projectrespite.surfingjudge.domain.service.JudgeService;
@@ -9,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,5 +34,12 @@ public class JudgeController {
     public JudgeEntity updateJudge(@RequestBody JudgeEntity entity) {
 
         return service.updateEntity(entity);
+    }
+
+    @PutMapping(value = "/judges/lists", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity postJudges(@RequestBody PlayerScoreRequest request) {
+
+        service.updateList(request);
+        return ResponseEntity.ok().build();
     }
 }

@@ -34,15 +34,15 @@ public class JudgeRepository implements IJudgeRepository {
     }
 
     @Override
-    public Optional<JudgeEntity> findByEntity(JudgeEntity entity) {
+    public Optional<JudgeEntity> findByParams(int round, int heat, int playerNumber, int judgeNumber, int wave) {
 
         val entities = client.database("judges", false)
                 .query(new QueryBuilder(and(
-                        eq("round", entity.getRound()),
-                        eq("heat", entity.getHeat()),
-                        eq("player_number", entity.getPlayerNumber()),
-                        eq("judge_number", entity.getJudgeNumber()),
-                        eq("wave", entity.getWave())))
+                        eq("round", round),
+                        eq("heat", heat),
+                        eq("player_number", playerNumber),
+                        eq("judge_number", judgeNumber),
+                        eq("wave", wave)))
                         .fields("id", "rev")
                         .build(), JudgeEntity.class)
                 .getDocs();

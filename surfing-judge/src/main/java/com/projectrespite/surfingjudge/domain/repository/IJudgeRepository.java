@@ -9,7 +9,7 @@ public interface IJudgeRepository {
 
     List<JudgeEntity> findJudgeByRoundHeat(int round, int heat);
 
-    Optional<JudgeEntity> findByEntity(JudgeEntity entity);
+    Optional<JudgeEntity> findByParams(int round, int heat, int playerNumber, int judgeNumber, int wave);
 
     JudgeEntity updateEntity(JudgeEntity entity);
 
