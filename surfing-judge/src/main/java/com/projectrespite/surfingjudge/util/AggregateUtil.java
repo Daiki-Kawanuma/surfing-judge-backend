@@ -1,4 +1,4 @@
-package com.projectrespite.surfingjudge;
+package com.projectrespite.surfingjudge.util;
 
 import lombok.var;
 
