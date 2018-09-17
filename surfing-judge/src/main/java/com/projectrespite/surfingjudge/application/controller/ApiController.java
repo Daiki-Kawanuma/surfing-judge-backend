@@ -27,38 +27,7 @@ public class ApiController {
     @Autowired
     private CloudantClient client;
 
-    @PutMapping(value = "/judgeEntity", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<JudgeEntity> postJudge(@RequestBody JudgeEntity judgeEntity) {
-
-        var database = client.database("judges", false);
-
-
-        try {
-
-            var idRev = database.query(new QueryBuilder(and(
-                    eq("round", judgeEntity.getRound()),
-                    eq("heat", judgeEntity.getHeat()),
-                    eq("player_number", judgeEntity.getPlayerNumber()),
-                    eq("judge_number", judgeEntity.getJudgeNumber()),
-                    eq("wave", judgeEntity.getWave())))
-                    .fields("id", "rev")
-                    .build(), IdRev.class)
-                    .getDocs().get(0);
-
-            judgeEntity.setId(idRev.get_id());
-            judgeEntity.setRev(idRev.get_rev());
-            database.update(judgeEntity);
-
-        } catch (IndexOutOfBoundsException e) {
-
-            database.post(judgeEntity);
-        }
-
-        return ResponseEntity.ok()
-                .body(judgeEntity);
-    }
-
-    @PutMapping(value = "/judges", consumes = MediaType.APPLICATION_JSON_VALUE)
+    /*@PutMapping(value = "/judges", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity postJudges(@RequestBody JudgeListRequest form) {
 
         var database = client.database("judges", false);
@@ -91,7 +60,7 @@ public class ApiController {
         });
 
         return ResponseEntity.ok().body(null);
-    }
+    }*/
 
     @PutMapping("/judge-number")
     public ResponseEntity putJudgeNumber() {

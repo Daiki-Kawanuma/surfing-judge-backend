@@ -6,9 +6,11 @@ import com.cloudant.client.api.query.Sort;
 import com.projectrespite.surfingjudge.domain.model.data.JudgeEntity;
 import com.projectrespite.surfingjudge.domain.repository.IJudgeRepository;
 import lombok.AllArgsConstructor;
+import lombok.val;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.cloudant.client.api.query.Expression.eq;
 import static com.cloudant.client.api.query.Operation.and;
@@ -29,5 +31,39 @@ public class JudgeRepository implements IJudgeRepository {
                         .fields("player_number", "player_name", "wave", "score", "judge_number")
                         .build(), JudgeEntity.class)
                 .getDocs();
+    }
+
+    @Override
+    public Optional<JudgeEntity> findByEntity(JudgeEntity entity) {
+
+        val entities = client.database("judges", false)
+                .query(new QueryBuilder(and(
+                        eq("round", entity.getRound()),
+                        eq("heat", entity.getHeat()),
+                        eq("player_number", entity.getPlayerNumber()),
+                        eq("judge_number", entity.getJudgeNumber()),
+                        eq("wave", entity.getWave())))
+                        .fields("id", "rev")
+                        .build(), JudgeEntity.class)
+                .getDocs();
+
+        if (entities.size() == 0)
+            return Optional.empty();
+        else
+            return Optional.of(entities.get(0));
+    }
+
+    @Override
+    public JudgeEntity updateEntity(JudgeEntity entity) {
+
+        client.database("judges", false).update(entity);
+        return entity;
+    }
+
+    @Override
+    public JudgeEntity saveEntity(JudgeEntity entity) {
+
+        client.database("judges", false).post(entity);
+        return entity;
     }
 }
