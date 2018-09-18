@@ -2,96 +2,23 @@ package com.projectrespite.surfingjudge.application.controller;
 
 import com.cloudant.client.api.CloudantClient;
 import com.cloudant.client.api.query.QueryBuilder;
-import com.cloudant.client.api.query.Sort;
 import com.projectrespite.surfingjudge.domain.model.data.*;
-import com.projectrespite.surfingjudge.domain.model.request.JudgeListRequest;
 import com.projectrespite.surfingjudge.domain.model.response.JudgeNumberResponse;
-import com.projectrespite.surfingjudge.domain.model.response.JudgeResponse;
 import lombok.val;
-import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-import static com.cloudant.client.api.query.Expression.eq;
 import static com.cloudant.client.api.query.Expression.gt;
-import static com.cloudant.client.api.query.Operation.and;
 
 @RestController
 public class ApiController {
 
     @Autowired
     private CloudantClient client;
-
-    @PutMapping(value = "/judgeEntity", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<JudgeEntity> postJudge(@RequestBody JudgeEntity judgeEntity) {
-
-        var database = client.database("judges", false);
-
-
-        try {
-
-            var idRev = database.query(new QueryBuilder(and(
-                    eq("round", judgeEntity.getRound()),
-                    eq("heat", judgeEntity.getHeat()),
-                    eq("player_number", judgeEntity.getPlayerNumber()),
-                    eq("judge_number", judgeEntity.getJudgeNumber()),
-                    eq("wave", judgeEntity.getWave())))
-                    .fields("id", "rev")
-                    .build(), IdRev.class)
-                    .getDocs().get(0);
-
-            judgeEntity.setId(idRev.get_id());
-            judgeEntity.setRev(idRev.get_rev());
-            database.update(judgeEntity);
-
-        } catch (IndexOutOfBoundsException e) {
-
-            database.post(judgeEntity);
-        }
-
-        return ResponseEntity.ok()
-                .body(judgeEntity);
-    }
-
-    @PutMapping(value = "/judges", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity postJudges(@RequestBody JudgeListRequest form) {
-
-        var database = client.database("judges", false);
-
-        int i[] = {1};
-
-        form.getScores().forEach(score -> {
-
-            var idRev = database.query(new QueryBuilder(and(
-                    eq("round", form.getRound()),
-                    eq("heat", form.getHeat()),
-                    eq("player_number", form.getPlayerNumber()),
-                    eq("judge_number", i[0]),
-                    eq("wave", form.getWave())))
-                    .fields("id", "rev")
-                    .build(), IdRev.class)
-                    .getDocs().get(0);
-
-            var judge = new JudgeEntity();
-            judge.setId(idRev.get_id());
-            judge.setRev(idRev.get_rev());
-            judge.setRound(form.getRound());
-            judge.setHeat(form.getHeat());
-            judge.setPlayerNumber(form.getPlayerNumber());
-            judge.setPlayerName(form.getName());
-            judge.setJudgeNumber(i[0]++);
-            judge.setWave(form.getWave());
-            judge.setScore(score);
-            database.update(judge);
-        });
-
-        return ResponseEntity.ok().body(null);
-    }
 
     @PutMapping("/judge-number")
     public ResponseEntity putJudgeNumber() {

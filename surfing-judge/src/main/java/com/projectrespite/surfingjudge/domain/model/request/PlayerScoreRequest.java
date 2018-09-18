@@ -7,14 +7,16 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class JudgeListRequest {
+public class PlayerScoreRequest {
 
     private int round;
     private int heat;
     @JsonProperty("player_number")
     @SerializedName("player_number")
     private int playerNumber;
-    private String name;
+    @JsonProperty("player_name")
+    @SerializedName("player_name")
+    private String playerName;
     private int wave;
     private List<Double> scores;
 }

@@ -7,11 +7,11 @@ import lombok.Data;
 @Data
 public class JudgeEntity {
 
-    @JsonProperty("_id")
+    @JsonProperty("id")
     @SerializedName("_id")
     private String id;
 
-    @JsonProperty("_rev")
+    @JsonProperty("rev")
     @SerializedName("_rev")
     private String rev;
 
