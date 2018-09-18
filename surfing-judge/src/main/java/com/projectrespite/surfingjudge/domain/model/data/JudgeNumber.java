@@ -1,5 +1,7 @@
 package com.projectrespite.surfingjudge.domain.model.data;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -9,7 +11,15 @@ import java.util.List;
 @AllArgsConstructor
 public class JudgeNumber {
 
-    private String _id;
-    private String _rev;
+    @JsonProperty("id")
+    @SerializedName("_id")
+    private String id;
+
+    @JsonProperty("rev")
+    @SerializedName("_rev")
+    private String rev;
+
+    @JsonProperty("numbers")
+    @SerializedName("numbers")
     private List<String> numbers;
 }

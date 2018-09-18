@@ -31,12 +31,14 @@ public class JudgeController {
     }
 
     @PutMapping(value = "/judges", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "ジャッジ登録", produces = "application/json", response = JudgeEntity.class)
     public JudgeEntity updateJudge(@RequestBody JudgeEntity entity) {
 
         return service.updateEntity(entity);
     }
 
-    @PutMapping(value = "/judges/lists", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PutMapping(value = "/judges/player-scores", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "ジャッジ一括更新", produces = "application/json", response = ResponseEntity.class)
     public ResponseEntity postJudges(@RequestBody PlayerScoreRequest request) {
 
         service.updateList(request);
