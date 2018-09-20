@@ -43,7 +43,7 @@ public class JudgeRepository implements IJudgeRepository {
                         eq("player_number", playerNumber),
                         eq("judge_number", judgeNumber),
                         eq("wave", wave)))
-                        .fields("id", "rev")
+                        .fields("_id", "_rev")
                         .build(), JudgeEntity.class)
                 .getDocs();
 

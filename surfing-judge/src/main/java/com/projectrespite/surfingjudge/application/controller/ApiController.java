@@ -20,38 +20,6 @@ public class ApiController {
     @Autowired
     private CloudantClient client;
 
-    @PutMapping("/judge-number")
-    public ResponseEntity putJudgeNumber() {
-
-        val database = client.database("judge_number", false);
-        val judgeNumber = database.query(new QueryBuilder(gt("id", "0"))
-                .fields("id", "rev", "numbers")
-                .build(), JudgeNumber.class)
-                .getDocs().get(0);
-
-        if (judgeNumber.getNumbers().size() < 5) {
-
-            for (String s : Arrays.asList("1", "2", "3", "4", "5")) {
-
-                if (!judgeNumber.getNumbers().contains(s)) {
-
-                    judgeNumber.getNumbers().add(s);
-                    Collections.sort(judgeNumber.getNumbers());
-                    database.update(judgeNumber);
-                    return ResponseEntity.ok()
-                            .body(new JudgeNumberResponse("success", s));
-                }
-            }
-
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new JudgeNumberResponse("failure", null));
-
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new JudgeNumberResponse("failure", null));
-        }
-    }
-
     @DeleteMapping("/judge-number/{number}")
     public ResponseEntity deleteJudgeNumber(@PathVariable String number) {
 
