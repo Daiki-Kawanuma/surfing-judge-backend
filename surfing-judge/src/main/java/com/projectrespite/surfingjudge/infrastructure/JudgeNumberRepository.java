@@ -18,6 +18,7 @@ public class JudgeNumberRepository implements IJudgeNumberRepository {
 
     private CloudantClient client;
 
+    @Override
     public Optional<JudgeNumber> getJudgeNumber(){
 
         val judgeNumbers = client.database("judge_number", false)

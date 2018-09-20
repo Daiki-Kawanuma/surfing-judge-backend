@@ -19,7 +19,7 @@ public class JudgeNumberController {
 
     @PutMapping("/judge-number")
     @ApiOperation(value = "ジャッジ番号登録", produces = "application/json", response = JudgeNumberResponse.class)
-    public ResponseEntity putJudgeNumber() {
+    public ResponseEntity<JudgeNumberResponse> putJudgeNumber() {
 
         val s = service.updateJudgeNumber();
 

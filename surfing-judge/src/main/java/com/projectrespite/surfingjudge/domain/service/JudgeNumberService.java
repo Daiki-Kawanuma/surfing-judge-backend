@@ -6,6 +6,7 @@ import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,7 +22,7 @@ public class JudgeNumberService {
         val optional = repository.getJudgeNumber();
 
         if (!optional.isPresent())
-            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Cloudant error happen");
+            throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Database error happen");
 
         val judgeNumber = optional.get();
 
@@ -40,6 +41,6 @@ public class JudgeNumberService {
             }
         }
 
-        throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Cloudant error happen");
+        throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Database error happen");
     }
 }
