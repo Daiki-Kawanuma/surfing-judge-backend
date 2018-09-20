@@ -43,4 +43,20 @@ public class JudgeNumberService {
 
         throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Database error happen");
     }
+
+    public void deleteJudgeNumber(String number){
+
+        val optional = repository.getJudgeNumber();
+
+        if (!optional.isPresent())
+            throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Database error happen");
+
+        val judgeNumber = optional.get();
+
+        if (!judgeNumber.getNumbers().contains(number))
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Judge number not found");
+
+        judgeNumber.getNumbers().remove(number);
+        repository.update(judgeNumber);
+    }
 }
