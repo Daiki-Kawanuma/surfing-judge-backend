@@ -14,17 +14,16 @@ public class LoginService {
 
         LoginResponse response;
 
+        if(request.getPassword() == null)
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "password is not contained");
+
         switch (request.getPassword()) {
             case "player":
-                response = new LoginResponse("success", "player");
-                break;
+                return new LoginResponse("success", "player");
             case "judge":
-                response = new LoginResponse("success", "judge");
-                break;
+                return new LoginResponse("success", "judge");
             default:
                 throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED, "password wrong");
         }
-
-        return response;
     }
 }
