@@ -21,14 +21,14 @@ public class CompetitionController {
 
     private CompetitionService service;
 
-    @GetMapping("/judges/{round}")
+    @GetMapping("/{round}")
     @ApiOperation(value = "ジャッジ取得", produces = "application/json", response = CompetitionEntity.class, responseContainer = "List")
     public List<CompetitionEntity> getCompetitionByRound(@ApiParam(value = "ラウンド", required = true) @PathVariable int round) {
 
         return service.getCompetitionByRound(round);
     }
 
-    @GetMapping("/judges/{round}/{heat}")
+    @GetMapping("/{round}/{heat}")
     @ApiOperation(value = "ジャッジ取得", produces = "application/json", response = CompetitionEntity.class, responseContainer = "List")
     public List<CompetitionEntity> getCompetitionByRound(@ApiParam(value = "ラウンド", required = true) @PathVariable int round,
                                                          @ApiParam(value = "ヒート", required = true) @PathVariable int heat) {
