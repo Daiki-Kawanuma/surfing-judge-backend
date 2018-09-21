@@ -12,21 +12,18 @@ public class LoginService {
 
     public LoginResponse login(LoginRequest request) {
 
-        var response = new LoginResponse();
+        LoginResponse response;
+
+        if(request.getPassword() == null)
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "password is not contained");
 
         switch (request.getPassword()) {
             case "player":
-                response.setStatus("success");
-                response.setRole("player");
-                break;
+                return new LoginResponse("success", "player");
             case "judge":
-                response.setStatus("success");
-                response.setRole("judge");
-                break;
+                return new LoginResponse("success", "judge");
             default:
-                throw new HttpClientErrorException(HttpStatus.CONFLICT, "password wrong");
+                throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED, "password wrong");
         }
-
-        return response;
     }
 }
