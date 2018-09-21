@@ -12,19 +12,17 @@ public class LoginService {
 
     public LoginResponse login(LoginRequest request) {
 
-        var response = new LoginResponse();
+        LoginResponse response;
 
         switch (request.getPassword()) {
             case "player":
-                response.setStatus("success");
-                response.setRole("player");
+                response = new LoginResponse("success", "player");
                 break;
             case "judge":
-                response.setStatus("success");
-                response.setRole("judge");
+                response = new LoginResponse("success", "judge");
                 break;
             default:
-                throw new HttpClientErrorException(HttpStatus.CONFLICT, "password wrong");
+                throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED, "password wrong");
         }
 
         return response;
