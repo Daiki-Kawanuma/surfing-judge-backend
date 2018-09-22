@@ -17,6 +17,7 @@ public class JudgeConverter implements Function<List<JudgeEntity>, JudgeResponse
         val response = new JudgeResponse();
         response.setPlayerNumber(first.getPlayerNumber());
         response.setPlayerName(first.getPlayerName());
+        response.setPlayerColor(first.getPlayerColor());
         response.setWave(first.getWave());
 
         val scores = judgeEntities.stream()

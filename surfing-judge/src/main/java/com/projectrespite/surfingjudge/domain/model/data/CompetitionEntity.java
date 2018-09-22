@@ -1,5 +1,6 @@
 package com.projectrespite.surfingjudge.domain.model.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
@@ -7,11 +8,11 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class CompetitionEntity {
 
-    @JsonProperty("id")
+    @JsonIgnore
     @SerializedName("_id")
     private String id;
 
-    @JsonProperty("rev")
+    @JsonIgnore
     @SerializedName("_rev")
     private String rev;
 

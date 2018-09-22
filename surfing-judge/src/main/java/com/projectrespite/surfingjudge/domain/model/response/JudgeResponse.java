@@ -17,6 +17,10 @@ public class JudgeResponse {
     @SerializedName("player_name")
     private String playerName;
 
+    @JsonProperty("player_color")
+    @SerializedName("player_color")
+    private String playerColor;
+
     @JsonProperty("wave")
     @SerializedName("wave")
     private int wave;

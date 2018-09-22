@@ -17,6 +17,9 @@ public class PlayerScoreRequest {
     @JsonProperty("player_name")
     @SerializedName("player_name")
     private String playerName;
+    @JsonProperty("player_color")
+    @SerializedName("player_color")
+    private String playerColor;
     private int wave;
     private List<Double> scores;
 }
