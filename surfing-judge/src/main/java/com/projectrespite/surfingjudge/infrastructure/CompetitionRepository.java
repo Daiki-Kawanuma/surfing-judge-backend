@@ -37,4 +37,11 @@ public class CompetitionRepository implements ICompetitionRepository {
                         .build(), CompetitionEntity.class)
                 .getDocs();
     }
+
+    @Override
+    public void saveCompetitionByRoundHeat(CompetitionEntity entity) {
+
+        client.database("competition", false)
+                .save(entity);
+    }
 }

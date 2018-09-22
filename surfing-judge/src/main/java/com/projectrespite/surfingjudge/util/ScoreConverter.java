@@ -15,7 +15,7 @@ public class ScoreConverter implements Function<List<JudgeEntity>, ScoreResponse
 
         val first = judgeEntities.get(0);
         val response = new ScoreResponse();
-        response.setName(first.getPlayerName());
+        response.setPlayerName(first.getPlayerName());
         response.setPlayerNumber(first.getPlayerNumber());
 
         List<Double> scores = judgeEntities.stream()

@@ -6,10 +6,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,17 +19,25 @@ public class CompetitionController {
     private CompetitionService service;
 
     @GetMapping("/{round}")
-    @ApiOperation(value = "ジャッジ取得", produces = "application/json", response = CompetitionEntity.class, responseContainer = "List")
+    @ApiOperation(value = "対戦表取得", produces = "application/json", response = CompetitionEntity.class, responseContainer = "List")
     public List<CompetitionEntity> getCompetitionByRound(@ApiParam(value = "ラウンド", required = true) @PathVariable int round) {
 
         return service.getCompetitionByRound(round);
     }
 
     @GetMapping("/{round}/{heat}")
-    @ApiOperation(value = "ジャッジ取得", produces = "application/json", response = CompetitionEntity.class, responseContainer = "List")
-    public List<CompetitionEntity> getCompetitionByRound(@ApiParam(value = "ラウンド", required = true) @PathVariable int round,
+    @ApiOperation(value = "対戦表取得", produces = "application/json", response = CompetitionEntity.class, responseContainer = "List")
+    public List<CompetitionEntity> getCompetitionByRoundHeat(@ApiParam(value = "ラウンド", required = true) @PathVariable int round,
                                                          @ApiParam(value = "ヒート", required = true) @PathVariable int heat) {
 
         return service.getCompetitionByRoundHeat(round, heat);
+    }
+
+    @PutMapping("/{round}/{heat}")
+    @ApiOperation(value = "対戦終了", produces = "application/json", response = CompetitionEntity.class, responseContainer = "List")
+    public void gcompleteCompetitionByRoundHeat(@ApiParam(value = "ラウンド", required = true) @PathVariable int round,
+                                                                   @ApiParam(value = "ヒート", required = true) @PathVariable int heat) {
+
+        service.completeCompetitionByRoundHeat(round, heat);
     }
 }

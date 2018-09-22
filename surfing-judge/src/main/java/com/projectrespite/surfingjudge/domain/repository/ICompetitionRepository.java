@@ -8,5 +8,5 @@ public interface ICompetitionRepository {
 
     List<CompetitionEntity> getCompetitionByRound(int round);
     List<CompetitionEntity> getCompetitionByRoundHeat(int round, int heat);
-
+    void saveCompetitionByRoundHeat(CompetitionEntity entity);
 }

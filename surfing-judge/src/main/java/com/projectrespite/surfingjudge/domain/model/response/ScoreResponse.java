@@ -15,8 +15,8 @@ public class ScoreResponse {
     @SerializedName("player_number")
     private int playerNumber;
 
-    @JsonProperty("playerName")
-    private String name;
+    @JsonProperty("player_name")
+    private String playerName;
 
     @JsonProperty("scores")
     private List<Double> scores;
