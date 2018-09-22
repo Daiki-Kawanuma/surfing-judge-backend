@@ -2,6 +2,7 @@ package com.projectrespite.surfingjudge.util;
 
 import lombok.var;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -10,10 +11,21 @@ public class MathUtil {
 
     public static double average(List<Double> array) {
 
-        double max = array.stream().max(Comparator.naturalOrder()).get();
-        double min = array.stream().min(Comparator.naturalOrder()).get();
-        double sum = array.stream().mapToDouble(d -> d).sum();
-        return (sum - max - min) / (array.size() - 2);
+        if(array.size() > 3){
+
+            double max = array.stream().max(Comparator.naturalOrder()).get();
+            double min = array.stream().min(Comparator.naturalOrder()).get();
+            double sum = array.stream().mapToDouble(d -> d).sum();
+            return new BigDecimal((sum - max - min) / (array.size() - 2))
+                    .setScale(3, BigDecimal.ROUND_HALF_UP)
+                    .doubleValue();
+
+        } else {
+
+            return new BigDecimal(array.stream().mapToDouble(d -> d).sum() / array.size())
+                    .setScale(3, BigDecimal.ROUND_HALF_UP)
+                    .doubleValue();
+        }
     }
 
     public static double sumBestAndSecondBest(List<Double> list) {
