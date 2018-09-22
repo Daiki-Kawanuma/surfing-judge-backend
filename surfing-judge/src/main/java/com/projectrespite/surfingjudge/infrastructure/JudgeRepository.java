@@ -28,7 +28,7 @@ public class JudgeRepository implements IJudgeRepository {
                 .query(new QueryBuilder(and(
                         eq("round", round), eq("heat", heat)))
                         .sort(Sort.asc("player_number"), Sort.asc("judge_number"))
-                        .fields("player_number", "player_name", "wave", "score", "judge_number")
+                        .fields("player_number", "player_name", "player_color", "wave", "score", "judge_number")
                         .build(), JudgeEntity.class)
                 .getDocs();
     }

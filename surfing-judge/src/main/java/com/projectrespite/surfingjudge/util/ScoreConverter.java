@@ -17,6 +17,7 @@ public class ScoreConverter implements Function<List<JudgeEntity>, ScoreResponse
         val response = new ScoreResponse();
         response.setPlayerName(first.getPlayerName());
         response.setPlayerNumber(first.getPlayerNumber());
+        response.setPlayerColor(first.getPlayerColor());
 
         List<Double> scores = judgeEntities.stream()
                 .collect(Collectors.groupingBy(JudgeEntity::getWave))

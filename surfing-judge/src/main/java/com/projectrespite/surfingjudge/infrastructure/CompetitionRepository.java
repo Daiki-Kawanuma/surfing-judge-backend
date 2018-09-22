@@ -2,6 +2,7 @@ package com.projectrespite.surfingjudge.infrastructure;
 
 import com.cloudant.client.api.CloudantClient;
 import com.cloudant.client.api.query.QueryBuilder;
+import com.cloudant.client.api.query.Sort;
 import com.projectrespite.surfingjudge.domain.model.data.CompetitionEntity;
 import com.projectrespite.surfingjudge.domain.repository.ICompetitionRepository;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,7 @@ public class CompetitionRepository implements ICompetitionRepository {
         return client.database("competition", false)
                 .query(new QueryBuilder(eq("round", round))
                         .fields("_id", "_rev", "player_number", "player_name", "player_color", "round", "heat")
+                        .sort(Sort.asc("player_number"))
                         .build(), CompetitionEntity.class)
                 .getDocs();
     }
@@ -34,6 +36,7 @@ public class CompetitionRepository implements ICompetitionRepository {
         return client.database("competition", false)
                 .query(new QueryBuilder(and(eq("round", round), eq("heat", heat)))
                         .fields("_id", "_rev", "player_number", "player_name", "player_color", "round", "heat")
+                        .sort(Sort.asc("player_number"))
                         .build(), CompetitionEntity.class)
                 .getDocs();
     }

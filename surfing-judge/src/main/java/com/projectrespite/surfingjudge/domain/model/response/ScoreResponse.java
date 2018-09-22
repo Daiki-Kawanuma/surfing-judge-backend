@@ -18,6 +18,9 @@ public class ScoreResponse {
     @JsonProperty("player_name")
     private String playerName;
 
+    @JsonProperty("player_color")
+    private String playerColor;
+
     @JsonProperty("scores")
     private List<Double> scores;
 

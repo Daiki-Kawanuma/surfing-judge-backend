@@ -1,5 +1,6 @@
 package com.projectrespite.surfingjudge.domain.model.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
@@ -7,11 +8,11 @@ import lombok.Data;
 @Data
 public class JudgeEntity {
 
-    @JsonProperty("id")
+    @JsonIgnore
     @SerializedName("_id")
     private String id;
 
-    @JsonProperty("rev")
+    @JsonIgnore
     @SerializedName("_rev")
     private String rev;
 
@@ -30,6 +31,10 @@ public class JudgeEntity {
     @JsonProperty("player_name")
     @SerializedName("player_name")
     private String playerName;
+
+    @JsonProperty("player_color")
+    @SerializedName("player_color")
+    private String playerColor;
 
     @JsonProperty("judge_number")
     @SerializedName("judge_number")

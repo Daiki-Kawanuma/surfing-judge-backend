@@ -72,6 +72,7 @@ public class JudgeService {
                 entity.setHeat(request.getHeat());
                 entity.setPlayerNumber(request.getPlayerNumber());
                 entity.setPlayerName(request.getPlayerName());
+                entity.setPlayerColor(request.getPlayerColor());
                 entity.setJudgeNumber(i[0]++);
                 entity.setWave(request.getWave());
                 entity.setScore(score);
