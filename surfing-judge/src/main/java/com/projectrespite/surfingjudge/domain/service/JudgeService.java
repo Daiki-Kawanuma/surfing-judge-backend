@@ -8,9 +8,7 @@ import com.projectrespite.surfingjudge.util.JudgeConverter;
 import com.projectrespite.surfingjudge.util.JudgeKey;
 import lombok.AllArgsConstructor;
 import lombok.val;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 import java.util.Map;
@@ -73,15 +71,15 @@ public class JudgeService {
                 entity.setPlayerNumber(request.getPlayerNumber());
                 entity.setPlayerName(request.getPlayerName());
                 entity.setPlayerColor(request.getPlayerColor());
-                entity.setJudgeNumber(i[0]++);
+                entity.setJudgeNumber(i[0]);
                 entity.setWave(request.getWave());
                 entity.setScore(score);
 
                 repository.updateEntity(entity);
 
-            } else {
-                throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Request error");
             }
+
+            i[0]++;
         });
     }
 }
