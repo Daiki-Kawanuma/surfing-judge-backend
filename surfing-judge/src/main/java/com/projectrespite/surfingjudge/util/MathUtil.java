@@ -11,21 +11,9 @@ public class MathUtil {
 
     public static double average(List<Double> array) {
 
-        if(array.size() > 3){
-
-            double max = array.stream().max(Comparator.naturalOrder()).get();
-            double min = array.stream().min(Comparator.naturalOrder()).get();
-            double sum = array.stream().mapToDouble(d -> d).sum();
-            return new BigDecimal((sum - max - min) / (array.size() - 2))
-                    .setScale(3, BigDecimal.ROUND_HALF_UP)
-                    .doubleValue();
-
-        } else {
-
-            return new BigDecimal(array.stream().mapToDouble(d -> d).sum() / array.size())
-                    .setScale(3, BigDecimal.ROUND_HALF_UP)
-                    .doubleValue();
-        }
+        return new BigDecimal(array.stream().mapToDouble(d -> d).sum() / array.size())
+                .setScale(1, BigDecimal.ROUND_HALF_UP)
+                .doubleValue();
     }
 
     public static double sumBestAndSecondBest(List<Double> list) {
@@ -37,9 +25,13 @@ public class MathUtil {
         temp.sort(Comparator.reverseOrder());
 
         if (temp.size() == 1)
-            return temp.get(0);
+            return new BigDecimal(temp.get(0))
+                    .setScale(1, BigDecimal.ROUND_HALF_UP)
+                    .doubleValue();
 
         else
-            return temp.get(0) + temp.get(1);
+            return new BigDecimal(temp.get(0) + temp.get(1))
+                    .setScale(1, BigDecimal.ROUND_HALF_UP)
+                    .doubleValue();
     }
 }
