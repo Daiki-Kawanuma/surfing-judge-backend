@@ -1,6 +1,5 @@
-package com.projectrespite.surfingjudge.domain.model.data;
+package com.projectrespite.surfingjudge.domain.model.response;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
@@ -8,15 +7,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class CompetitionEntity {
-
-    @JsonIgnore
-    @SerializedName("_id")
-    private String id;
-
-    @JsonIgnore
-    @SerializedName("_rev")
-    private String rev;
+public class CompetitionResponse {
 
     @JsonProperty("player_number")
     @SerializedName("player_number")
@@ -37,4 +28,7 @@ public class CompetitionEntity {
     @JsonProperty("heat")
     @SerializedName("heat")
     private int heat;
+
+    @JsonProperty("wave_count")
+    private int waveCount;
 }

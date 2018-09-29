@@ -1,25 +1,30 @@
 package com.projectrespite.surfingjudge.util;
 
+import com.projectrespite.surfingjudge.domain.model.data.CompetitionEntity;
 import com.projectrespite.surfingjudge.domain.model.data.JudgeEntity;
 import com.projectrespite.surfingjudge.domain.model.response.ScoreResponse;
+import lombok.AllArgsConstructor;
 import lombok.val;
 
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class ScoreConverter implements Function<List<JudgeEntity>, ScoreResponse> {
+@AllArgsConstructor
+public class ScoreConverter implements Function<CompetitionEntity, ScoreResponse> {
+
+    private List<JudgeEntity> judges;
 
     @Override
-    public ScoreResponse apply(List<JudgeEntity> judgeEntities) {
+    public ScoreResponse apply(CompetitionEntity entity) {
 
-        val first = judgeEntities.get(0);
         val response = new ScoreResponse();
-        response.setPlayerName(first.getPlayerName());
-        response.setPlayerNumber(first.getPlayerNumber());
-        response.setPlayerColor(first.getPlayerColor());
+        response.setPlayerNumber(entity.getPlayerNumber());
+        response.setPlayerName(entity.getPlayerName());
+        response.setPlayerColor(entity.getPlayerColor());
 
-        List<Double> scores = judgeEntities.stream()
+        List<Double> scores = judges.stream()
+                .filter(j -> j.getPlayerNumber() == entity.getPlayerNumber())
                 .collect(Collectors.groupingBy(JudgeEntity::getWave))
                 .entrySet()
                 .stream()
