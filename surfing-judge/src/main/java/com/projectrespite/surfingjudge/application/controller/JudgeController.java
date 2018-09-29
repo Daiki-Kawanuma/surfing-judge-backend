@@ -3,6 +3,7 @@ package com.projectrespite.surfingjudge.application.controller;
 import com.projectrespite.surfingjudge.domain.model.data.JudgeEntity;
 import com.projectrespite.surfingjudge.domain.model.request.PlayerScoreRequest;
 import com.projectrespite.surfingjudge.domain.model.response.JudgeResponse;
+import com.projectrespite.surfingjudge.domain.model.response.JudgedWaveResponse;
 import com.projectrespite.surfingjudge.domain.model.response.ScoreResponse;
 import com.projectrespite.surfingjudge.domain.service.JudgeService;
 import io.swagger.annotations.Api;
@@ -43,5 +44,14 @@ public class JudgeController {
 
         service.updateList(request);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/judges/{round}/{heat}/{judgeNumber}/judged-wave")
+    @ApiOperation(value = "ジャッジ済みWave取得", produces = "application/json", response = JudgedWaveResponse.class, responseContainer = "List")
+    public List<JudgedWaveResponse> getJudgedWave(@ApiParam(value = "ラウンド", required = true) @PathVariable int round,
+                                                  @ApiParam(value = "ヒート", required = true) @PathVariable int heat,
+                                                  @ApiParam(value = "ジャッジ番号", required = true) @PathVariable int judgeNumber) {
+
+        return service.getJudgedWave(round, heat, judgeNumber);
     }
 }

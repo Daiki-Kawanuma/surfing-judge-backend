@@ -34,6 +34,18 @@ public class JudgeRepository implements IJudgeRepository {
     }
 
     @Override
+    public List<JudgeEntity> findJudgeByRoundHeatJudgeNumber(int round, int heat, int judgeNumber) {
+
+        return client.database("judges", false)
+                .query(new QueryBuilder(and(
+                        eq("round", round), eq("heat", heat), eq("judge_number", judgeNumber)))
+                        .sort(Sort.asc("player_number"), Sort.asc("judge_number"))
+                        .fields("player_number", "player_name", "player_color", "wave", "score", "judge_number")
+                        .build(), JudgeEntity.class)
+                .getDocs();
+    }
+
+    @Override
     public Optional<JudgeEntity> findByParams(int round, int heat, int playerNumber, int judgeNumber, int wave) {
 
         val entities = client.database("judges", false)
