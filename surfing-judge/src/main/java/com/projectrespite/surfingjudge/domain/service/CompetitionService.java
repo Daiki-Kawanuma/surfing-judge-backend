@@ -4,10 +4,12 @@ import com.projectrespite.surfingjudge.domain.model.data.CompetitionEntity;
 import com.projectrespite.surfingjudge.domain.model.response.ScoreResponse;
 import com.projectrespite.surfingjudge.domain.repository.ICompetitionRepository;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.val;
-import lombok.var;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -15,192 +17,100 @@ import java.util.List;
 @AllArgsConstructor
 public class CompetitionService {
 
-    private ICompetitionRepository competitionRepository;
-    private ScoreService scoreService;
+	private ICompetitionRepository competitionRepository;
 
-    public List<CompetitionEntity> getCompetitionByRoundHeat(int round, int heat){
+	private ScoreService scoreService;
 
-        return competitionRepository.getCompetitionByRoundHeat(round, heat);
-    }
+	public List<CompetitionEntity> getCompetitionByRoundHeat(int round, int heat) {
 
-    public List<CompetitionEntity> getCompetitionByRound(int round){
+		return competitionRepository.getCompetitionByRoundHeat(round, heat);
+	}
 
-        return competitionRepository.getCompetitionByRound(round);
-    }
+	public List<CompetitionEntity> getCompetitionByRound(int round) {
 
-    public void completeCompetitionByRoundHeat(int round, int heat){
+		return competitionRepository.getCompetitionByRound(round);
+	}
 
-        val scores = scoreService.getScores(round, heat);
-        scores.sort(Comparator.comparing(ScoreResponse::getAggregate).reversed());
+	public void completeCompetitionByRoundHeat(int round, int heat) {
 
-        if(round == 1 && heat == 1){
+		val roundHeat = RoundHeat.fromIntegerRoundHeat(round, heat);
 
-            var score = scores.get(0);
-            competitionRepository.saveCompetitionByRoundHeat(
-                    new CompetitionEntity(null, null, score.getPlayerNumber(), score.getPlayerName(),
-                            "Red", 2, 1));
+		val scores = scoreService.getScores(round, heat);
+		scores.sort(Comparator.comparing(ScoreResponse::getAggregate).reversed());
 
-            score = scores.get(1);
-            competitionRepository.saveCompetitionByRoundHeat(
-                    new CompetitionEntity(null, null, score.getPlayerNumber(), score.getPlayerName(),
-                            "White", 2, 2));
+		val rank1Score = scores.get(0);
+		val rank1Next = roundHeat.getRank1nextRoundHeat();
+		competitionRepository.saveCompetitionByRoundHeat(
+				new CompetitionEntity(
+						null,
+						null,
+						rank1Score.getPlayerNumber(),
+						rank1Score.getPlayerName(),
+						rank1Next.getRight().getColor(),
+						rank1Next.getLeft().getRound(),
+						rank1Next.getLeft().getHeat()));
 
-        } else if(round == 1 && heat == 2){
+		val rank2Score = scores.get(1);
+		val rank2Next = roundHeat.getRank2nextRoundHeat();
+		competitionRepository.saveCompetitionByRoundHeat(
+				new CompetitionEntity(
+						null,
+						null,
+						rank2Score.getPlayerNumber(),
+						rank2Score.getPlayerName(),
+						rank2Next.getRight().getColor(),
+						rank2Next.getLeft().getRound(),
+						rank2Next.getLeft().getHeat()));
 
-            var score = scores.get(0);
-            competitionRepository.saveCompetitionByRoundHeat(
-                    new CompetitionEntity(null, null, score.getPlayerNumber(), score.getPlayerName(),
-                            "Red", 2, 2));
+	}
 
-            score = scores.get(1);
-            competitionRepository.saveCompetitionByRoundHeat(
-                    new CompetitionEntity(null, null, score.getPlayerNumber(), score.getPlayerName(),
-                            "White", 2, 1));
+	@AllArgsConstructor
+	@Getter
+	enum RoundHeat {
+		ROUND1_1(1, 1, Pair.of(RoundHeat.ROUND2_1, Color.RED), Pair.of(RoundHeat.ROUND2_2, Color.WHITE)),
+		ROUND1_2(1, 2, Pair.of(RoundHeat.ROUND2_2, Color.RED), Pair.of(RoundHeat.ROUND2_1, Color.WHITE)),
+		ROUND1_3(1, 3, Pair.of(RoundHeat.ROUND2_3, Color.RED), Pair.of(RoundHeat.ROUND2_1, Color.BLUE)),
+		ROUND1_4(1, 4, Pair.of(RoundHeat.ROUND2_4, Color.RED), Pair.of(RoundHeat.ROUND2_3, Color.WHITE)),
+		ROUND1_5(1, 5, Pair.of(RoundHeat.ROUND2_1, Color.YELLOW), Pair.of(RoundHeat.ROUND2_4, Color.WHITE)),
+		ROUND1_6(1, 6, Pair.of(RoundHeat.ROUND2_2, Color.YELLOW), Pair.of(RoundHeat.ROUND2_4, Color.BLUE)),
+		ROUND1_7(1, 7, Pair.of(RoundHeat.ROUND2_3, Color.YELLOW), Pair.of(RoundHeat.ROUND2_2, Color.BLUE)),
+		ROUND1_8(1, 8, Pair.of(RoundHeat.ROUND2_4, Color.YELLOW), Pair.of(RoundHeat.ROUND2_3, Color.BLUE)),
+		ROUND2_1(2, 1, Pair.of(RoundHeat.ROUND3_1, Color.RED), Pair.of(RoundHeat.ROUND3_2, Color.WHITE)),
+		ROUND2_2(2, 2, Pair.of(RoundHeat.ROUND3_2, Color.RED), Pair.of(RoundHeat.ROUND3_1, Color.WHITE)),
+		ROUND2_3(2, 3, Pair.of(RoundHeat.ROUND3_1, Color.YELLOW), Pair.of(RoundHeat.ROUND3_2, Color.BLUE)),
+		ROUND2_4(2, 4, Pair.of(RoundHeat.ROUND3_2, Color.YELLOW), Pair.of(RoundHeat.ROUND3_1, Color.BLUE)),
+		ROUND3_1(3, 1, Pair.of(RoundHeat.ROUND4_1, Color.RED), Pair.of(RoundHeat.ROUND4_1, Color.YELLOW)),
+		ROUND3_2(3, 2, Pair.of(RoundHeat.ROUND4_1, Color.WHITE), Pair.of(RoundHeat.ROUND4_1, Color.BLUE)),
+		ROUND4_1(4, 1, null, null);
 
-        } else if(round == 1 && heat == 3){
+		private int round;
 
-            var score = scores.get(0);
-            competitionRepository.saveCompetitionByRoundHeat(
-                    new CompetitionEntity(null, null, score.getPlayerNumber(), score.getPlayerName(),
-                            "Red", 2, 3));
+		private int heat;
 
-            score = scores.get(1);
-            competitionRepository.saveCompetitionByRoundHeat(
-                    new CompetitionEntity(null, null, score.getPlayerNumber(), score.getPlayerName(),
-                            "Blue", 2, 1));
+		private Pair<RoundHeat, Color> rank1nextRoundHeat;
 
-        } else if(round == 1 && heat == 4){
+		private Pair<RoundHeat, Color> rank2nextRoundHeat;
 
-            var score = scores.get(0);
-            competitionRepository.saveCompetitionByRoundHeat(
-                    new CompetitionEntity(null, null, score.getPlayerNumber(), score.getPlayerName(),
-                            "Red", 2, 4));
+		public static RoundHeat fromIntegerRoundHeat(int round, int heat) {
+			return Arrays
+					.stream(RoundHeat.values())
+					.filter(e -> e.getRound() == round)
+					.filter(e -> e.getHeat() == heat)
+					.findFirst().orElseThrow(IllegalArgumentException::new);
+		}
+	}
 
-            score = scores.get(1);
-            competitionRepository.saveCompetitionByRoundHeat(
-                    new CompetitionEntity(null, null, score.getPlayerNumber(), score.getPlayerName(),
-                            "White", 2, 3));
+	@AllArgsConstructor
+	@Getter
+	enum Color {
+		RED("Red"),
+		WHITE("White"),
+		YELLOW("Yellow"),
+		BLUE("Blue"),
+		BLACK("Black");
 
-        } else if(round == 1 && heat == 5){
-
-            var score = scores.get(0);
-            competitionRepository.saveCompetitionByRoundHeat(
-                    new CompetitionEntity(null, null, score.getPlayerNumber(), score.getPlayerName(),
-                            "Yellow", 2, 1));
-
-            score = scores.get(1);
-            competitionRepository.saveCompetitionByRoundHeat(
-                    new CompetitionEntity(null, null, score.getPlayerNumber(), score.getPlayerName(),
-                            "White", 2, 4));
-
-        } else if(round == 1 && heat == 6){
-
-            var score = scores.get(0);
-            competitionRepository.saveCompetitionByRoundHeat(
-                    new CompetitionEntity(null, null, score.getPlayerNumber(), score.getPlayerName(),
-                            "Yellow", 2, 2));
-
-            score = scores.get(1);
-            competitionRepository.saveCompetitionByRoundHeat(
-                    new CompetitionEntity(null, null, score.getPlayerNumber(), score.getPlayerName(),
-                            "Blue", 2, 4));
-
-        } else if(round == 1 && heat == 7){
-
-            var score = scores.get(0);
-            competitionRepository.saveCompetitionByRoundHeat(
-                    new CompetitionEntity(null, null, score.getPlayerNumber(), score.getPlayerName(),
-                            "Yellow", 2, 3));
-
-            score = scores.get(1);
-            competitionRepository.saveCompetitionByRoundHeat(
-                    new CompetitionEntity(null, null, score.getPlayerNumber(), score.getPlayerName(),
-                            "Blue", 2, 2));
-
-        } else if(round == 1 && heat == 8){
-
-            var score = scores.get(0);
-            competitionRepository.saveCompetitionByRoundHeat(
-                    new CompetitionEntity(null, null, score.getPlayerNumber(), score.getPlayerName(),
-                            "Yellow", 2, 4));
-
-            score = scores.get(1);
-            competitionRepository.saveCompetitionByRoundHeat(
-                    new CompetitionEntity(null, null, score.getPlayerNumber(), score.getPlayerName(),
-                            "Blue", 2, 3));
-
-        } else if(round == 2 && heat == 1){
-
-            var score = scores.get(0);
-            competitionRepository.saveCompetitionByRoundHeat(
-                    new CompetitionEntity(null, null, score.getPlayerNumber(), score.getPlayerName(),
-                            "Red", 3, 1));
-
-            score = scores.get(1);
-            competitionRepository.saveCompetitionByRoundHeat(
-                    new CompetitionEntity(null, null, score.getPlayerNumber(), score.getPlayerName(),
-                            "White", 3, 2));
-
-        } else if(round == 2 && heat == 2){
-
-            var score = scores.get(0);
-            competitionRepository.saveCompetitionByRoundHeat(
-                    new CompetitionEntity(null, null, score.getPlayerNumber(), score.getPlayerName(),
-                            "Red", 3, 2));
-
-            score = scores.get(1);
-            competitionRepository.saveCompetitionByRoundHeat(
-                    new CompetitionEntity(null, null, score.getPlayerNumber(), score.getPlayerName(),
-                            "White", 3, 1));
-
-        } else if(round == 2 && heat == 3){
-
-            var score = scores.get(0);
-            competitionRepository.saveCompetitionByRoundHeat(
-                    new CompetitionEntity(null, null, score.getPlayerNumber(), score.getPlayerName(),
-                            "Yellow", 3, 1));
-
-            score = scores.get(1);
-            competitionRepository.saveCompetitionByRoundHeat(
-                    new CompetitionEntity(null, null, score.getPlayerNumber(), score.getPlayerName(),
-                            "Blue", 3, 2));
-
-        } else if(round == 2 && heat == 4){
-
-            var score = scores.get(0);
-            competitionRepository.saveCompetitionByRoundHeat(
-                    new CompetitionEntity(null, null, score.getPlayerNumber(), score.getPlayerName(),
-                            "Yellow", 3, 2));
-
-            score = scores.get(1);
-            competitionRepository.saveCompetitionByRoundHeat(
-                    new CompetitionEntity(null, null, score.getPlayerNumber(), score.getPlayerName(),
-                            "Blue", 3, 1));
-
-        } else if(round == 3 && heat == 1){
-
-            var score = scores.get(0);
-            competitionRepository.saveCompetitionByRoundHeat(
-                    new CompetitionEntity(null, null, score.getPlayerNumber(), score.getPlayerName(),
-                            "Red", 4, 1));
-
-            score = scores.get(1);
-            competitionRepository.saveCompetitionByRoundHeat(
-                    new CompetitionEntity(null, null, score.getPlayerNumber(), score.getPlayerName(),
-                            "Yellow", 4, 1));
-
-        } else if(round == 3 && heat == 2){
-
-            var score = scores.get(0);
-            competitionRepository.saveCompetitionByRoundHeat(
-                    new CompetitionEntity(null, null, score.getPlayerNumber(), score.getPlayerName(),
-                            "White", 4, 1));
-
-            score = scores.get(1);
-            competitionRepository.saveCompetitionByRoundHeat(
-                    new CompetitionEntity(null, null, score.getPlayerNumber(), score.getPlayerName(),
-                            "Blue", 4, 1));
-
-        }
-    }
+		private String color;
+	}
 }
+
+
