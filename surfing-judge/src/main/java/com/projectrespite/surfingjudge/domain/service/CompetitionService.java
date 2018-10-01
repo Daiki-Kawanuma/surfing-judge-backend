@@ -34,6 +34,8 @@ public class CompetitionService {
 	public void completeCompetitionByRoundHeat(int round, int heat) {
 
 		val roundHeat = RoundHeat.fromIntegerRoundHeat(round, heat);
+		if (roundHeat == RoundHeat.ROUND4_1)
+			return;
 
 		val scores = scoreService.getScores(round, heat);
 		scores.sort(Comparator.comparing(ScoreResponse::getAggregate).reversed());
