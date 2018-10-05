@@ -43,7 +43,7 @@ public class JudgeService {
         val competitions = competitionRepository.getCompetitionByRoundHeat(round,heat);
 
         return competitions.stream()
-                .map(new JudgedWaveConverter(judges))
+                .map(new JudgedWaveConverter(judgeNumber, judges))
                 .collect(Collectors.toList());
     }
 
