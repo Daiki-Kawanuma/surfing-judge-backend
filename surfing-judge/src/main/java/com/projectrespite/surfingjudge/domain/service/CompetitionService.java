@@ -42,7 +42,7 @@ public class CompetitionService {
 
 		val rank1Score = scores.get(0);
 		val rank1Next = roundHeat.getRank1nextRoundHeat();
-		competitionRepository.save(
+		competitionRepository.saveOrUpdate(
 				new CompetitionEntity(
 						null,
 						null,
@@ -54,7 +54,7 @@ public class CompetitionService {
 
 		val rank2Score = scores.get(1);
 		val rank2Next = roundHeat.getRank2nextRoundHeat();
-		competitionRepository.save(
+		competitionRepository.saveOrUpdate(
 				new CompetitionEntity(
 						null,
 						null,
