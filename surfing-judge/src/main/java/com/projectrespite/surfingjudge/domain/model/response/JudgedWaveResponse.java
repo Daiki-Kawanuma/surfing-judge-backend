@@ -1,6 +1,7 @@
 package com.projectrespite.surfingjudge.domain.model.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.projectrespite.surfingjudge.domain.model.data.Color;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,4 +22,8 @@ public class JudgedWaveResponse {
 
     @JsonProperty("wave")
     private int wave;
+
+    public int getColorOrder(){
+        return Color.fromString(this.playerColor).getOrder();
+    }
 }

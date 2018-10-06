@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -44,6 +45,7 @@ public class JudgeService {
 
         return competitions.stream()
                 .map(new JudgedWaveConverter(judgeNumber, judges))
+                .sorted(Comparator.comparing(JudgedWaveResponse::getColorOrder))
                 .collect(Collectors.toList());
     }
 
