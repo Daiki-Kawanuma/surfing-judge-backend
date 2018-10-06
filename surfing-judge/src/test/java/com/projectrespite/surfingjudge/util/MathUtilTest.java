@@ -22,21 +22,21 @@ public class MathUtilTest {
 	public void averageDuplicateMax() {
 		val testArray = Arrays.asList(1.0, 2.0, 3.0, 4.0, 4.0);
 		val result = MathUtil.average(testArray);
-		assertThat(result, is(3.0));
+		assertThat(result, is(2.8));
 	}
 
 	@Test
 	public void averageDuplicateMin() {
 		val testArray = Arrays.asList(2.0, 2.0, 3.0, 4.0, 5.0);
 		val result = MathUtil.average(testArray);
-		assertThat(result, is(3.0));
+		assertThat(result, is(3.2));
 	}
 
 	@Test
 	public void averageListSize2() {
 		val testArray = Arrays.asList(2.0, 5.0);
 		val result = MathUtil.average(testArray);
-		assertThat(result, is(Double.NaN));
+		assertThat(result, is(3.5));
 	}
 
 	@Test
