@@ -13,6 +13,7 @@ import java.util.function.Function;
 @AllArgsConstructor
 public class JudgedWaveConverter implements Function<CompetitionEntity, JudgedWaveResponse> {
 
+    private int judgeNumber;
     private List<JudgeEntity> judges;
 
     @Override
@@ -20,7 +21,10 @@ public class JudgedWaveConverter implements Function<CompetitionEntity, JudgedWa
 
         val response = new JudgedWaveResponse();
         response.setPlayerNumber(entity.getPlayerNumber());
+        response.setPlayerName(entity.getPlayerName());
+        response.setPlayerColor(entity.getPlayerColor());
         response.setWave(judges.stream()
+                .filter(j -> j.getJudgeNumber() == this.judgeNumber && j.getPlayerNumber() == entity.getPlayerNumber())
                 .max(Comparator.comparing(JudgeEntity::getWave))
                 .map(JudgeEntity::getWave).orElse(0));
 

@@ -1,6 +1,6 @@
 applications:
 - name: surfing-judge
   buildpack: liberty-for-java
-  memory: 256M
+  memory: 512M
   instances: 1
   path: build/libs/surfing-judge.war

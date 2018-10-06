@@ -13,6 +13,12 @@ public class JudgedWaveResponse {
     @JsonProperty("player_number")
     private int playerNumber;
 
+    @JsonProperty("player_name")
+    private String playerName;
+
+    @JsonProperty("player_color")
+    private String playerColor;
+
     @JsonProperty("wave")
     private int wave;
 }
