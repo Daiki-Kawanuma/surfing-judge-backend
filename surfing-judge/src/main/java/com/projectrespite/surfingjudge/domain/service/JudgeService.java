@@ -35,6 +35,7 @@ public class JudgeService {
         return groupByPlayer.entrySet().stream()
                 .map(Map.Entry::getValue)
                 .map(new JudgeConverter())
+                .sorted(Comparator.comparing(JudgeResponse::getColorOrder))
                 .collect(Collectors.toList());
     }
 

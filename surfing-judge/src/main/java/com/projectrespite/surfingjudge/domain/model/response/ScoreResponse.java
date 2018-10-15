@@ -34,6 +34,7 @@ public class ScoreResponse {
     @JsonIgnore
     private double[][] judgedScores = new double[10][5];
 
+    @JsonIgnore
     public int getColorOrder(){
         return Color.fromString(this.playerColor).getOrder();
     }

@@ -2,6 +2,6 @@ spring:
   jackson:
     default-property-inclusion: NON_NULL
 cloudant:
-  username: 58a56719-d46d-4cb6-aa85-191d59f8ff6d-bluemix
-  password: 70325f90bdb9c5387880b20aaea0edca2c09bd0ab59e72f47ba183d29ca9ba65
-  url: https://58a56719-d46d-4cb6-aa85-191d59f8ff6d-bluemix:70325f90bdb9c5387880b20aaea0edca2c09bd0ab59e72f47ba183d29ca9ba65@58a56719-d46d-4cb6-aa85-191d59f8ff6d-bluemix.cloudant.com
+  username: 55cc06ac-795a-41b0-b38d-00707bb8830a-bluemix
+  password: 564d9504b1712413ba39ad0c2423d5e6857ea8ddb175882a09efc88fe9193ae8
+  url: https://55cc06ac-795a-41b0-b38d-00707bb8830a-bluemix:564d9504b1712413ba39ad0c2423d5e6857ea8ddb175882a09efc88fe9193ae8@55cc06ac-795a-41b0-b38d-00707bb8830a-bluemix.cloudant.com

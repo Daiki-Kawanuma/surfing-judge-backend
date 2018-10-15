@@ -1,5 +1,5 @@
 applications:
-- name: surfing-judge
+- name: surfing-judge-api
   buildpack: liberty-for-java
   memory: 512M
   instances: 1

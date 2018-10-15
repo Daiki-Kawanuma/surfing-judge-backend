@@ -1,7 +1,9 @@
 package com.projectrespite.surfingjudge.domain.model.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
+import com.projectrespite.surfingjudge.domain.model.data.Color;
 import lombok.Data;
 
 import java.util.List;
@@ -28,4 +30,9 @@ public class JudgeResponse {
     @JsonProperty("scores")
     @SerializedName("scores")
     private List<Double> scores;
+
+    @JsonIgnore
+    public int getColorOrder(){
+        return Color.fromString(this.playerColor).getOrder();
+    }
 }
